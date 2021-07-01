@@ -1,5 +1,7 @@
 # 42_Born2beroot
-Introduction to the wonderful world of virtualization, creating my first machine in VirtualBox
+Introduction to the wonderful world of virtualization, creating my first machine in VirtualBox.
+
+With this project I had my first contact with 
 
 ## VirtualBox machine Settings
 Before install the Operating system is needed to set some settings
@@ -36,7 +38,7 @@ PermitRootLogin no
 
 ### Check if SSH is working
 Now to test if your SSH is working you has to make the following commands on you host terminal:
-```bash
+```
 ssh <username>@<ip-address> -p <port>
 ```
 References:
@@ -54,7 +56,7 @@ Check if UFW status:
 sudo ufw status verbose
 ```
 If inactive, you can enable it:
-```bash
+```
 sudo ufw status enable 
 ```
 Setting um Default polices, and can be altered by following commands:
@@ -85,7 +87,7 @@ sudo nano /etc/hosts
 ### By command line
 As root, only have to make the following command:
 ```bash
-hostnamectl set-hostname <new_name>
+hostnamectl set-hostname new_hostname
 ```
 To check the hostname:
 ```bash
@@ -98,9 +100,9 @@ To change the default configuration to new or modified users is needed to change
 sudo nano /etc/login.defs
 ```
 and change the lines:
-- PASS_MAX_DAYS	<Maximum number of days a password may be used>
-- PASS_MIN_DAYS	<Minimum number of days aallowed between password changes>
-- PASS_WARN_AGE <Number of days warning given before a password expires>
+- PASS_MAX_DAYS 30	: Maximum number of days a password may be used = 30;
+- PASS_MIN_DAYS 2	: Minimum number of days aallowed between password changes = 2;
+- PASS_WARN_AGE 7	: Number of days warning given before a password expires = 7.
 
 For the others policies it is necessary to install password quality checking library using command:
 ```bash
@@ -113,36 +115,38 @@ sudo nano /etc/pam.d/common-password
 ```
 in the line as follow:
 
-`
-password	requisite	pam_pwquality.so ...
-`
+> ...
+> 
+> password	requisite	pam_pwquality.so ...
+> 
+> ...
+
 put the following settings:
-- minlen=10 : 10 characters long;
-- ucredit=-1 : If it have to contains at least a uppercase letter;
-- dcredit=-1 : If it have to contains at least a number;
-- maxrepeat=3 : Not contain more than 3 consecutive identical characters;
-- reject_username : Must not include the name of the user.
-- difok=7 : The password must have at least 7 characters that are not part of the former password.
-- enforce_for_root : root password has to comply with policy.
+- **minlen=10** : 10 characters long;
+- **ucredit=-1** : If it have to contains at least a uppercase letter;
+- **dcredit=-1** : If it have to contains at least a number;
+- **maxrepeat=3** : Not contain more than 3 consecutive identical characters;
+- **reject_username** : Must not include the name of the user.
+- **difok=7** : The password must have at least 7 characters that are not part of the former password.
+- **enforce_for_root** : root password has to comply with policy.
 
 #### For old users, there are following commands:
 To change maximum days:
 ```bash
-chage -M <username>
+chage -M number username
 ```
 To change minimum days:
 ```bash
-chage -m <username>
+chage -m number username
 ```
 To change warning days:
 ```bash
-chage -W <username>
+chage -W number username
 ```
 To show user configuration:
 ```bash
-chage -I <username>
+chage -l number username
 ```
-
 
 References:
 - https://www.thegeekdiary.com/understanding-etclogin-defs-file/
@@ -151,9 +155,91 @@ References:
 - https://www.tecmint.com/manage-user-password-expiration-and-aging-in-linux/
 
 ## Sudo Rules
+We already installed sudo in a preview section.
+To change sudo settings we need to open `/etc/sudoers` file.
+For this, in addition to writing nano command, we can also use the following:
 
-## Configure Users and Groups
+```
+sudo visudo
+```
+In this file, we need to add some configurations by Default, so under the line that have Defaults, we add:
+
+- **passwd_tries=3** : Authentication using sudo limited to 3 attempts;
+- **badpass_message="message"** : A custom message displayed if an error due to a wrong password occurs when using sudo.
+- **logfile="/var/log/sudo/sudo.log"**
+- **requiretty** : sudo only run when a real user is logged in;
+- **secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin"** : as determined by subject.
+
+References:
+- https://www.todoespacoonline.com/w/2015/10/su-sudo-e-sudoers-no-linux/
+- https://man7.org/linux/man-pages/man5/sudoers.5.html
+
+
+## Users and Groups
+
+### Creating Users
+
+```
+sudo useradd <username> -s /bin/bash -d /home/<username> -c <comment> -G <groups> -g <primary group>
+```
+
+There are the flags:
+- -s : set the standard shell to this user;
+- -d : Home directory for this user;
+- -c : Ser a Comment, usually is the name of the user;
+- -G : the groups that user belong, separated by a comma;
+- -g : set the primary group of this user
+
+To set to user a password:
+```
+sudo passwd <username>
+```
+
+### Modifying Users
+
+If is necessary to change some user information could use the following command:
+
+```
+sudo usermod [flags] <username>
+```
+
+for the flags, use the same flag as creating the user.
+
+
+### Groups
+
+To add a group, use this command:
+
+```
+sudo groupadd <groupname>
+```
+
+To change a groupname:
+
+```
+sudo groupadd -n <oldname> <newname>
+```
+
+References:
+- https://alexandrebbarbosa.wordpress.com/2014/05/26/criando-usuario-e-grupos-no-linux/
+- https://linux.die.net/man/8/usermod
 
 ## Monitoring Script
+
+It is all based in shell commands, so I gonna list bellow links that I used to create my script.
+
+- https://stackoverflow.com/questions/8967902/why-do-you-need-to-put-bin-bash-at-the-beginning-of-a-script-file#:~:text=Adding%20%23!%2Fbin%2Fbash%20as,or%20%22sha%2Dbang%22.
+- https://www.tecmint.com/find-out-linux-system-is-32-bit-or-64-bit/#:~:text=1.,all%20Linux%2FUnix%20operating%20systems.
+- https://www.cyberciti.biz/faq/check-how-many-cpus-are-there-in-linux-system/
+- https://askubuntu.com/questions/442914/calculating-the-number-of-lines-in-a-file
+- https://www.cyberciti.biz/faq/linux-ram-info-command/
+- https://guialinux.uniriotec.br/awk/
+- https://phoenixnap.com/kb/linux-check-disk-space
+- https://www.thegeekstuff.com/2011/10/linux-reboot-date-and-time/
+- https://www.geeksforgeeks.org/conditional-statements-shell-script/
+- https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/4/html/cluster_logical_volume_manager/lv_display
+- https://www.howtogeek.com/681468/how-to-use-the-ss-command-on-linux/
+- https://www.computerhope.com/issues/ch001649.htm
+- 
 
 ## CRON
