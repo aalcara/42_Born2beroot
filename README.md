@@ -57,13 +57,22 @@ sudo ufw status verbose
 ```
 If inactive, you can enable it:
 ```
-sudo ufw status enable 
+sudo ufw enable 
 ```
+
 Setting um Default polices, and can be altered by following commands:
+
 ```bash
 sudo ufw default deny incoming
 sudo ufw default allow outgoing
 ```
+
+If necessary to delete some ufw rule, we can run this command:
+```
+sudo ufw delete <n>
+```
+*n* is the line of rule to delete.
+
 
 References:
 - https://www.tecmint.com/setup-ufw-firewall-on-ubuntu-and-debian/
@@ -76,7 +85,7 @@ To not need to restart the system, make this command:
 ```bash
 sudo hostname <new_name>
 ```
-Nest edit `/etc/hostname` file, changing the old name for the new name:
+Then edit `/etc/hostname` file, changing the old name for the new name:
 ```bash
 sudo nano /etc/hostname
 ```

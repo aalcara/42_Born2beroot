@@ -14,7 +14,7 @@ PRCNT=$(df -m --total | awk 'END {print $5}')
 echo "#disk Usage: ${USED}/${TOTAL}MB (${PRCNT})"
 echo "#CPU load: $(mpstat | awk '/all/ {printf "%.2f", 100 - $NF}')%"
 echo "#Last boot: $(who -b | awk '{print $3, $4}')"
-LVMCOUNT=$(lvscan | grep ACTIVE | wc -l)
+LVMCOUNT=$(/usr/sbin/blkid | grep -c '/dev/mapper')
 if [ $LVMCOUNT -eq 0 ]
 then
 	echo "#LVM use: no"
