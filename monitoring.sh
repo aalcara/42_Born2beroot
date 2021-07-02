@@ -1,5 +1,6 @@
 #!/bin/bash
 
+{
 echo "#Architecture: $(uname -a)"
 echo "#CPU physical: $(cat /proc/cpuinfo | grep 'physical id'| uniq | wc -l)"
 echo "#vCPU: $(cat /proc/cpuinfo | grep processor| wc -l)"
@@ -24,3 +25,4 @@ echo "#connections TCP: $(ss -s | awk '/TCP:/ {print $2}')"
 echo "#User Log: $(who | wc -l)"
 echo "#Network: IP $(hostname -I) ($(ip a | awk '/ether/ {print $2}'))"
 echo "#Sudo: $(cat /var/log/sudo/sudo.log | grep COMMAND | wc -l) cmd"
+} | wall

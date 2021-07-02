@@ -1,7 +1,7 @@
 # 42_Born2beroot
 Introduction to the wonderful world of virtualization, creating my first machine in VirtualBox.
 
-With this project I had my first contact with 
+With this project I had my first contact with some features and have more contact with other that I already used. Starting with Debian Operational System and package management like apt-get up to features like LVM, UFW, cron, users and groups management, shell commands and virtualization.
 
 ## VirtualBox machine Settings
 Before install the Operating system is needed to set some settings
@@ -93,6 +93,10 @@ To check the hostname:
 ```bash
 hostnamectl
 ```
+
+References:
+- https://www.cyberciti.biz/faq/ubuntu-change-hostname-command/
+
 
 ## Password Policy
 To change the default configuration to new or modified users is needed to change `/etc/login.defs` :
@@ -243,3 +247,49 @@ It is all based in shell commands, so I gonna list bellow links that I used to c
 - 
 
 ## CRON
+
+To set a configuration on CRON, it is necessary check if cron is installed:
+
+```
+sudo apt-get install cron
+```
+
+Then run this command:
+
+```
+crontab -e
+```
+to open o an editor of my choice. When close the editor the modified crontab will be installed automatically.
+
+To introduce an task is needed to set a line with these fields:
+
+```
+m h dom mon dow command
+```
+
+The meaning of each variable is:
+- **m** : minutes;
+- **h** : hours;
+- **dom** : day of month;
+- **mon** : month;
+- **dow** : day of week;
+
+### start and stop cron
+
+to start cron service:
+
+```
+/etc/init.d/cron start
+```
+
+To stop  cron service:
+```
+/etc/init.d/cron stop
+```
+
+
+References:
+- https://man7.org/linux/man-pages/man1/crontab.1.html
+- https://man7.org/linux/man-pages/man5/crontab.5.html
+- https://serverfault.com/questions/248305/running-cron-every-10-minutes/248306
+- https://lifelinux.com/how-to-startstoprestart-cron-service-in-linux/
